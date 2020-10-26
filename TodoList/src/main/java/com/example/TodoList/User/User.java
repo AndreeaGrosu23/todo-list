@@ -1,6 +1,6 @@
 package com.example.TodoList.User;
 
-import com.example.TodoList.ToDo.TodoModel;
+import com.example.TodoList.ToDo.Todo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="USERS")
+@Table
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserModel {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,6 +25,10 @@ public class UserModel {
     @NotEmpty
     private String username;
 
-    @OneToMany(mappedBy = "userModel", cascade=CascadeType.ALL, orphanRemoval = true)
-    private List<TodoModel> todoList = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, orphanRemoval = true)
+//    private List<Todo> todoList = new ArrayList<>();
+
+    public User(@NotEmpty String username) {
+        this.username = username;
+    }
 }
