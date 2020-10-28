@@ -40,4 +40,37 @@ public class TodoController {
         }
         return null;
     }
+
+    @GetMapping(path="/{username}/sorted-asc")
+    public List<Todo> getAllTodosDeadlineAsc(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username).orElse(null);
+        if (user!=null) {
+            List<Todo> listTodos = todoService.getAllTodosByUserDeadlineAsc(user);
+            return listTodos;
+        }
+        return null;
+    }
+
+    @GetMapping(path="/{username}/sorted-desc")
+    public List<Todo> getAllTodosDeadlineDesc(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username).orElse(null);
+        if (user!=null) {
+            List<Todo> listTodos = todoService.getAllTodosByUserDeadlineDesc(user);
+            return listTodos;
+        }
+        return null;
+    }
+
+    @PostMapping(path="/{id}/status-change")
+    public Todo updateStatus(@PathVariable("id") Long id, @RequestBody String status) {
+        todoService.updateStatusTodo(id, status);
+        Todo todo = todoService.getTodoById(id);
+        return todo;
+
+    }
+
+    @DeleteMapping(path="/{id}/delete-todo")
+    public void deleteTodo(@PathVariable("id") Long id) {
+        todoService.deleteTodo(id);
+    }
 }
