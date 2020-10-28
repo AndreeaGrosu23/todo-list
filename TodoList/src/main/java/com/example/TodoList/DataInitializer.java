@@ -5,16 +5,13 @@ import com.example.TodoList.ToDo.Todo;
 import com.example.TodoList.ToDo.TodoRepository;
 import com.example.TodoList.User.User;
 import com.example.TodoList.User.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
-import java.util.Date;
 
 @Component
-//@Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -35,6 +32,7 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.save(user);
 
         Todo todo = new Todo("Hobby", "Go out for a walk", LocalDate.of(2020, 11, 3), 1, user);
+        todo.setCreatedAt(LocalDate.of(2020, 10, 26));
         todoRepository.save(todo);
     }
 
