@@ -2,9 +2,9 @@ import React from 'react';
 
 export default function Navbar() {
 
-    const username = "Andreea";
+    const username = "John Doe";
 
-    window.sessionStorage.setItem("user", "Andreea");
+    window.sessionStorage.setItem("user", username);
 
     return (
         <div>

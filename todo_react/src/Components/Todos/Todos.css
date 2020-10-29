@@ -5,11 +5,12 @@ body {
 }
 
 .taskContent {
-    width: 50%;
+    width: 40%;
     text-align : center;
     justify-content: center;
     padding: 50px;
-    margin: auto;   
+    margin: auto; 
+    font-size: 12px;  
 }
 
 .card-body {
@@ -29,6 +30,7 @@ body {
 
 .formUpdateDuration {
     display: flex;
+    font-size: 12px;
 }
 
 .form-control {
@@ -36,6 +38,11 @@ body {
     margin-right: 20px;
     display:inline-block;
     resize:none;
+    font-size: 12px;
+}
+
+textarea {
+    font-size: 12px;
 }
 
 .sortButton {
@@ -82,12 +89,14 @@ ul {
 
 #delete {
     background-color: red;
+    font-size: 12px;
 }
 
 #done {
     display:inline-block;
     margin-bottom: 10px;
     background-color: green;
+    font-size: 12px;
 }
 
 .btnAdd {
@@ -99,4 +108,9 @@ ul {
     background-color: blue;
     color : white;
 }
+
+#exampleFormControlTextarea1 {
+    font-size: 12px;
+}
+
 

@@ -135,7 +135,7 @@ export default function ShowTodos() {
                                             <i><span>Category: {todo.taskType}</span></i>
                                         </div>
                                         <hr></hr>
-                                        <h6><i>Deadline: {todo.deadline}</i> | <i>Estimated time(hours): {todo.duration}</i></h6>
+                                        <span><i>Deadline: {todo.deadline}</i> | <i>Estimated time(hours): {todo.duration}</i></span>
                                         <hr></hr>
                                         <div>
                                             {todo.status !== "Done" ?
@@ -160,7 +160,6 @@ export default function ShowTodos() {
                                                 className="form-control"
                                                 id="exampleFormControlTextarea1"
                                                 rows="1"
-                                                cols="8"
                                                 value={updatedDuration}
                                                 required
                                                 placeholder="Time spent in hours"
@@ -209,6 +208,7 @@ export default function ShowTodos() {
                             className="form-control"
                             id="exampleFormControlSelect1"
                             value = {taskType}
+                            style = {{ "fontSize" : "12px"}}
                             onChange = {e => setTaskType(e.currentTarget.value)}
                             >
                             <option>Work</option>
@@ -221,6 +221,7 @@ export default function ShowTodos() {
                             <label>Add task name</label>
                             <textarea
                             className="form-control"
+                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={name}
                             required
@@ -233,6 +234,7 @@ export default function ShowTodos() {
                             <label>Add deadline</label>
                             <textarea
                             className="form-control"
+                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={deadline}
                             required
@@ -245,6 +247,7 @@ export default function ShowTodos() {
                             <label>Estimate time needed for the task</label>
                             <textarea
                             className="form-control"
+                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={duration}
                             required
