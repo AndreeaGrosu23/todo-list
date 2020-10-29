@@ -1,6 +1,5 @@
 package com.example.TodoList;
 
-import com.example.TodoList.ToDo.TaskType;
 import com.example.TodoList.ToDo.Todo;
 import com.example.TodoList.ToDo.TodoRepository;
 import com.example.TodoList.User.User;
@@ -14,12 +13,11 @@ import java.time.LocalDate;
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final TodoRepository todoRepository;
 
+    @Autowired
     public DataInitializer(UserRepository userRepository, TodoRepository todoRepository) {
         this.userRepository = userRepository;
         this.todoRepository = todoRepository;
@@ -31,9 +29,6 @@ public class DataInitializer implements CommandLineRunner {
         User user = new User("Andreea");
         userRepository.save(user);
 
-        Todo todo = new Todo("Hobby", "Go out for a walk", LocalDate.of(2020, 11, 3), 1, user);
-        todo.setCreatedAt(LocalDate.of(2020, 10, 26));
-        todoRepository.save(todo);
     }
 
 

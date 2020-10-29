@@ -24,9 +24,9 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findAllByUserOrderByDeadlineDesc(User user);
 
     @Modifying(clearAutomatically = true)
-    @Query(value="update Todo t set t.status = :status where t.id = :id")
+    @Query(value="update Todo t set t.status = :status, t.deadline = :deadline, t.duration=:duration where t.id = :id")
     @Transactional
-    void updateStatus(@Param("status") String status, @Param("id") Long id);
+    void updateStatus(@Param("status") String status, @Param("deadline") LocalDate deadline, @Param("duration") int duration, @Param("id") Long id);
 
     Optional<Todo> findById(Long id);
 }

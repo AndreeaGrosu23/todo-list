@@ -36,8 +36,11 @@ public class TodoService {
         return listTodos;
     }
 
-    public void updateStatusTodo(Long id, String status) {
-        todoRepository.updateStatus(status, id);
+    public void updateStatusTodo(Long id, TodoStatusDone todoUpdated) {
+        String status = todoUpdated.getStatus();
+        LocalDate deadline = LocalDate.parse(todoUpdated.getDeadline());
+        int duration = todoUpdated.getDuration();
+        todoRepository.updateStatus(status, deadline, duration, id);
     }
 
     public Todo getTodoById(Long id) {
