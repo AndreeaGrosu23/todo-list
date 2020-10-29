@@ -15,8 +15,6 @@ import java.util.Optional;
 @Repository("todo")
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    List<Todo> findAllByUser(User user);
-
     List<Todo> findAllByUserOrderByCreatedAtDesc(User user);
 
     List<Todo> findAllByUserOrderByDeadlineAsc(User User);
