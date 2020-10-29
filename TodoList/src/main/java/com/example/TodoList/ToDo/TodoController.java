@@ -61,12 +61,11 @@ public class TodoController {
         return null;
     }
 
-    @PostMapping(path="/{id}/status-change")
-    public Todo updateStatus(@PathVariable("id") Long id, @RequestBody String status) {
-        todoService.updateStatusTodo(id, status);
+    @PutMapping(path="/{id}/status-change")
+    public Todo updateStatus(@PathVariable("id") Long id, @RequestBody TodoStatusDone todoUpdated) {
+        todoService.updateStatusTodo(id, todoUpdated);
         Todo todo = todoService.getTodoById(id);
         return todo;
-
     }
 
     @DeleteMapping(path="/{id}/delete-todo")
