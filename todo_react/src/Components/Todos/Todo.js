@@ -2,7 +2,6 @@ import React, { useEffect , useState } from 'react';
 import axios from 'axios';
 import './Todos.css';
 import Moment from 'moment';
-// import { Button, Modal } from "react-bootstrap";
 
 export default function ShowTodos() {
 
@@ -16,13 +15,9 @@ export default function ShowTodos() {
     const [name, setName] = useState();
     const [deadline, setDeadline] = useState();
     const [duration, setDuration] = useState();
-
-    // const [updatedDuration, setUpdatedDuration] = useState();
-    // const [showEstimationBox, setShowEstimationBox] = useState(false);
+    const [updatedDuration, setUpdatedDuration] = useState();
 
     const [sortedAsc, setSortedAsc] = useState(false);
-    // const [doneTodo, setDoneTodo] = useState();
-
 
     useEffect(() => {
         async function getTodos() {
@@ -32,7 +27,7 @@ export default function ShowTodos() {
             setAllTodos(response.data);
         }
         getTodos();
-    }, [username]);
+    }, [allTodos]);
 
     const calculateTimeLeft = (todo) => {
         let deadline = new Date(todo.deadline);
@@ -98,167 +93,177 @@ export default function ShowTodos() {
         getTodos();
     }
 
-    // const updateTask = (todo) => {
-    //     setShowEstimationBox(true);
-    //     setDoneTodo(todo);
-    // }
+    const changeStatus = (todo) => {
+        const finishDate = new Date();
+        const dateFormatted = Moment(finishDate).format('YYYY-MM-DD');
+        if (updatedDuration>0 && updatedDuration<2147483647) {
+            const data = { status : "Done",
+                    duration : updatedDuration,
+                    deadline : dateFormatted};
+            axios.put(`http://localhost:8080/api/v1/todo/${todo.id}/status-change`, data);
+            window.location.reload();
+        } else {
+            alert("Please enter a valid number of hours!");
+        }
+    }
 
-    // const handleClose = () => {
-    //     setShowEstimationBox(false);
-    // }
-
-    // const changeStatus = (todo) => {
-    //     const finishDate = new Date();
-    //     const dateFormatted = Moment(finishDate).format('YYYY-MM-DD');
-    //     const data = { status : "Done",
-    //             duration : updatedDuration,
-    //             deadline : dateFormatted};
-    //     axios.post(`http://localhost:8080/api/v1/todo/${todo.id}/status-change`, data);
-    //     window.location.reload();
-    // }
+    const handleClose = () => {
+        setShow(false);
+        window.location.reload();
+    }
 
     return (
-        <div>              
-            <div className="page-content page-container justify-content-center" id="page-content">
-                <div className="row container d-flex justify-content-center">
-                    <div className="col-md-8">
-                        <div className="card px-3">
-                            <div className="card-body">
-                            <h2 className="card-title">Todo list</h2> 
-                                <div className="sortButton">
-                                    { !sortedAsc ?
-                                    <button onClick={() => getSortedAsc()}>Sort by earliest deadline</button> 
-                                    :
-                                    <button onClick={() => getSortedDesc()}>Sort by latest deadline</button> 
-                                    }
-                                </div>                                
-                                <div className="list-wrapper">
-                                    <ul className="d-flex flex-column-reverse todo-list">       
-                                    {allTodos.map(todo => (                 
-                                        <div className="task-container" key={todo.id}>
-                                            <li className="ui-state-default">
-                                                <div className="taskBox">
-                                                    { todo.status !== "Done=" ?
-                                                        <div className="checkbox" >
-                                                            <label>
-                                                                <input type="checkbox" value=""/>
-                                                                <b>{todo.name}</b>
-                                                            </label>
-                                                        </div>
-                                                        :
-                                                        <div className="checkbox" style={{ "color" : "green"}}>
-                                                            <label>
-                                                                <input type="checkbox" value="" checked={true}/>
-                                                                <b>{todo.name}</b>
-                                                            </label>
-                                                        </div>
-                                                    }
-                                                    <hr></hr>
-                                                    <div>
-                                                        <i><span>Category: {todo.taskType}</span></i>
-                                                    </div>
-                                                    <hr></hr>
-                                                    <h6><i>Deadline: {todo.deadline}</i> | <i>Estimated time(hours): {todo.duration}</i></h6>
-                                                    <hr></hr>
-                                                    <div>
-                                                        { calculateTimeLeft(todo) >= 1 && todo.status !== "Done=" ?
-                                                        <i><span>Time left: {calculateTimeLeft(todo)} days</span></i>
-                                                        :
-                                                        <i><span style={{ "color" : "red" }}>Less than a day left!</span></i>
-                                                        }
-                                                    </div>
-                                                    <hr></hr>
-                                                    { todo.status !== "Done=" ?
-                                                    <div>
-                                                        <button style={{ "backgroundColor" : "red" }}
-                                                        type="button" 
-                                                        onClick={() => deleteTask(todo)}>
-                                                            Delete task
-                                                        </button>
-                                                    </div>
-                                                    :
-                                                    <span style={{ "color" : "red" }} >Cannot delete finished task</span>
-                                                    }
-                                                </div>
-                                            </li>
+        <div>
+            <h2 className="card-title">Todo list</h2> 
+            <div className="taskContent">              
+                <div className="card-body">      
+                    <div className="sortButton">
+                        { !sortedAsc ?
+                        <button onClick={() => getSortedAsc()}>Sort by earliest deadline</button> 
+                        :
+                        <button onClick={() => getSortedDesc()}>Sort by latest deadline</button> 
+                        }
+                    </div>                                
+                    <div className="list-wrapper">
+                        <ul >       
+                        {allTodos.map(todo => (                 
+                            <div className="task-container" key={todo.id}>
+                                <li className="ui-state-default">
+                                    <div className="taskBox">
+                                        { todo.status !== "Done=" ?
+                                        <label><b>{todo.name}</b></label>
+                                        :
+                                        <label><b>{todo.name}</b></label>
+                                        }
+                                        <hr></hr>
+                                        <div>
+                                            <i><span>Category: {todo.taskType}</span></i>
                                         </div>
-                                    ))}
-                                    </ul>
-                                </div>
-                            </div> 
-                            { !show ? 
+                                        <hr></hr>
+                                        <h6><i>Deadline: {todo.deadline}</i> | <i>Estimated time(hours): {todo.duration}</i></h6>
+                                        <hr></hr>
+                                        <div>
+                                            {todo.status !== "Done" ?
 
-                            <div className="addTaskButton">  
-                                <button onClick={handleAddTask}>Add task</button> 
-                            </div> 
-                            
-                            :
+                                                ( calculateTimeLeft(todo) > 0 ?
+                                                <i><span>Time left: {calculateTimeLeft(todo)} days</span></i>
+                                                :
+                                                
+                                                <i><span style={{ "color" : "red" }}>Less than a day left!</span></i>
+                                                )
 
-                            <div className="addTodoContainer">
-                                <form onSubmit={saveTask}>
-                                    <div className="form-group">
-                                        <label for="exampleFormControlSelect1">Task type</label>
-                                        <select
-                                        className="form-control"
-                                        id="exampleFormControlSelect1"
-                                        value = {taskType}
-                                        onChange = {e => setTaskType(e.currentTarget.value)}
-                                        >
-                                        <option>Work</option>
-                                        <option>Hobby</option>
-                                        <option>Home</option>
-                                        </select>
+                                                :
+
+                                                <i><span style={{ "color" : "green" }}>Task already done!</span></i>
+                                            }
+                                        </div>
+                                        <hr></hr>
+                                        { todo.status !== "Done" ?
+                                        <div>
+                                            <form className="formUpdateDuration" onSubmit={e => changeStatus(todo)}>                       
+                                                <textarea
+                                                className="form-control"
+                                                id="exampleFormControlTextarea1"
+                                                rows="1"
+                                                cols="8"
+                                                value={updatedDuration}
+                                                required
+                                                placeholder="Time spent in hours"
+                                                onChange = {e => setUpdatedDuration(e.currentTarget.value)}
+                                                >
+                                                </textarea>
+                                                
+                                                <button className="btn" id = "done" type="submit">
+                                                    Mark as done
+                                                </button>
+                                            </form>
+
+                                            <button className="btn" id="delete"
+                                            type="button" 
+                                            onClick={() => deleteTask(todo)}>
+                                                Delete task
+                                            </button>
+                                        </div>
+                                        :
+                                        <div></div>
+                                        }
                                     </div>
-                                    
-                                    <div className="form-group">
-                                        <label for="exampleFormControlTextarea1">Add task name</label>
-                                        <textarea
-                                        className="form-control"
-                                        id="exampleFormControlTextarea1"
-                                        rows="1"
-                                        value={name}
-                                        required
-                                        placeholder="What is your task?"
-                                        onChange = {e => setName(e.currentTarget.value)}
-                                        >
-                                        </textarea>
-                                    </div>
-                                    <div className="form-group">
-                                        <label for="exampleFormControlTextarea1">Add deadline</label>
-                                        <textarea
-                                        className="form-control"
-                                        id="exampleFormControlTextarea1"
-                                        rows="1"
-                                        value={deadline}
-                                        required
-                                        placeholder="YYYY-MM-DD"
-                                        onChange = {e => setDeadline(e.currentTarget.value)}
-                                        >
-                                        </textarea>
-                                    </div>
-                                    <div className="form-group">
-                                        <label for="exampleFormControlTextarea1">Estimate time needed for the task</label>
-                                        <textarea
-                                        className="form-control"
-                                        id="exampleFormControlTextarea1"
-                                        rows="1"
-                                        value={duration}
-                                        required
-                                        placeholder="How many hours?"
-                                        onChange = {e => setDuration(e.currentTarget.value)}
-                                        >
-                                        </textarea>
-                                    </div>
-                                    
-                                    <button type="submit" className="btn btn-primary">Save task</button>
-                                                                            
-                                </form>                                
+                                </li>
                             </div>
-                            }
-                        </div>
+                        ))}
+                        </ul>
                     </div>
+                </div> 
+                { !show ? 
+
+                <div className="addTaskButton">  
+                    <button onClick={handleAddTask}>Add task</button> 
+                </div> 
+                
+                :
+
+                <div className="addTodoContainer">
+                    <form onSubmit={saveTask}>
+                        <div className="form-group">
+                            <label for="exampleFormControlSelect1">Task type</label>
+                            <select
+                            className="form-control"
+                            id="exampleFormControlSelect1"
+                            value = {taskType}
+                            onChange = {e => setTaskType(e.currentTarget.value)}
+                            >
+                            <option>Work</option>
+                            <option>Hobby</option>
+                            <option>Home</option>
+                            </select>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label for="exampleFormControlTextarea1">Add task name</label>
+                            <textarea
+                            className="form-control"
+                            id="exampleFormControlTextarea1"
+                            rows="1"
+                            value={name}
+                            required
+                            placeholder="What is your task?"
+                            onChange = {e => setName(e.currentTarget.value)}
+                            >
+                            </textarea>
+                        </div>
+                        <div className="form-group">
+                            <label for="exampleFormControlTextarea1">Add deadline</label>
+                            <textarea
+                            className="form-control"
+                            id="exampleFormControlTextarea1"
+                            rows="1"
+                            value={deadline}
+                            required
+                            placeholder="YYYY-MM-DD"
+                            onChange = {e => setDeadline(e.currentTarget.value)}
+                            >
+                            </textarea>
+                        </div>
+                        <div className="form-group">
+                            <label for="exampleFormControlTextarea1">Estimate time needed for the task</label>
+                            <textarea
+                            className="form-control"
+                            id="exampleFormControlTextarea1"
+                            rows="1"
+                            value={duration}
+                            required
+                            placeholder="How many hours?"
+                            onChange = {e => setDuration(e.currentTarget.value)}
+                            >
+                            </textarea>
+                        </div>
+                        
+                        <button type="submit" className="btnAdd">Save task</button>
+                        <button onClick={handleClose} className="btnAdd">Back</button>                                    
+                    </form>                                
                 </div>
-            </div>
-        </div>           
+                }
+            </div> 
+        </div>          
     );
 }
