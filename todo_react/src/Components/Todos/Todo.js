@@ -6,17 +6,13 @@ import Moment from 'moment';
 export default function ShowTodos() {
 
     const [allTodos, setAllTodos] = useState([]);
-
     const [show, setShow] = useState(false);
-
     const username = window.sessionStorage.getItem("user");
-
     const [taskType, setTaskType] = useState("Work");
     const [name, setName] = useState();
     const [deadline, setDeadline] = useState();
     const [duration, setDuration] = useState();
     const [updatedDuration, setUpdatedDuration] = useState();
-
     const [sortedAsc, setSortedAsc] = useState(false);
 
     useEffect(() => {
@@ -27,7 +23,7 @@ export default function ShowTodos() {
             setAllTodos(response.data);
         }
         getTodos();
-    }, [allTodos]);
+    }, []);
 
     const calculateTimeLeft = (todo) => {
         let deadline = new Date(todo.deadline);
@@ -46,11 +42,9 @@ export default function ShowTodos() {
         let deadlineFormatted = Moment(deadline).format('YYYY-MM-DD');
         let now = new Date();
         let nowFormatted = Moment(now).format('YYYY-MM-DD');
-        console.log(deadlineFormatted);
-        console.log(nowFormatted);
         let isAfter = Moment(deadlineFormatted).isAfter(Moment(nowFormatted));
-        console.log(isAfter);
-        if (isAfter && duration>0 && duration<2147483647) {
+        let isToday = deadlineFormatted===nowFormatted;
+        if ( (isToday || isAfter) && duration>0 && duration<2147483647) {
             const data = {
                 taskType : taskType,
                 name : name,
@@ -75,7 +69,7 @@ export default function ShowTodos() {
         setSortedAsc(false);
         async function getTodos() {
             const response = await axios.get(
-                `http://localhost:8080/api/v1/todo/${username}/sorted-asc`
+                `http://localhost:8080/api/v1/todo/${username}/sorted-desc`
             );
             setAllTodos(response.data);
         }
@@ -86,7 +80,7 @@ export default function ShowTodos() {
         setSortedAsc(true);
         async function getTodos() {
             const response = await axios.get(
-                `http://localhost:8080/api/v1/todo/${username}/sorted-desc`
+                `http://localhost:8080/api/v1/todo/${username}/sorted-asc`
             );
             setAllTodos(response.data);
         }
@@ -114,8 +108,9 @@ export default function ShowTodos() {
 
     return (
         <div>
-            <h2 className="card-title">Todo list</h2> 
-            <div className="taskContent">              
+            <h2 className="card-title">To-Do List</h2>          
+            <div className="taskContent">   
+            { allTodos.length ?            
                 <div className="card-body">      
                     <div className="sortButton">
                         { !sortedAsc ?
@@ -194,6 +189,10 @@ export default function ShowTodos() {
                         </ul>
                     </div>
                 </div> 
+                 :
+                <div>You don't have any tasks yet! Please add one.</div>
+                }
+
                 { !show ? 
 
                 <div className="addTaskButton">  
@@ -219,10 +218,9 @@ export default function ShowTodos() {
                         </div>
                         
                         <div className="form-group">
-                            <label for="exampleFormControlTextarea1">Add task name</label>
+                            <label>Add task name</label>
                             <textarea
                             className="form-control"
-                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={name}
                             required
@@ -232,10 +230,9 @@ export default function ShowTodos() {
                             </textarea>
                         </div>
                         <div className="form-group">
-                            <label for="exampleFormControlTextarea1">Add deadline</label>
+                            <label>Add deadline</label>
                             <textarea
                             className="form-control"
-                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={deadline}
                             required
@@ -245,10 +242,9 @@ export default function ShowTodos() {
                             </textarea>
                         </div>
                         <div className="form-group">
-                            <label for="exampleFormControlTextarea1">Estimate time needed for the task</label>
+                            <label>Estimate time needed for the task</label>
                             <textarea
                             className="form-control"
-                            id="exampleFormControlTextarea1"
                             rows="1"
                             value={duration}
                             required
